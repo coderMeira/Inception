@@ -50,14 +50,14 @@ define( 'WP_ALLOW_REPAIR', true );
  *
  * @since 2.6.0
  */
-define( 'AUTH_KEY',         'put your unique phrase here' );
-define( 'SECURE_AUTH_KEY',  'put your unique phrase here' );
-define( 'LOGGED_IN_KEY',    'put your unique phrase here' );
-define( 'NONCE_KEY',        'put your unique phrase here' );
-define( 'AUTH_SALT',        'put your unique phrase here' );
-define( 'SECURE_AUTH_SALT', 'put your unique phrase here' );
-define( 'LOGGED_IN_SALT',   'put your unique phrase here' );
-define( 'NONCE_SALT',       'put your unique phrase here' );
+define('AUTH_KEY',         '7i[??P.Q|hQjU+Oik%gkl?+zc;&:`,G#.|cPPDZh:a=h3g*Z@JabA-%zx&2,RHy|');
+define('SECURE_AUTH_KEY',  'K*PmK=4_!bc?xTo SYfaeR[La^s4I&;J!j2Aeq:;N*CCkS5R&|[CWd@-R.+C`vxQ');
+define('LOGGED_IN_KEY',    '|qFmUikPLtAT]]%^8JO!LxlcHyi@*%z*un=px8_1+3 =2vGF8d]pLNje0:ADG DO');
+define('NONCE_KEY',        '}208G,lNgEPQ#zUH.snBLGh O#-ssB+G5!f?qNqm6,pc3+eqP,yiI@+m-c[2P]h2');
+define('AUTH_SALT',        'S@|SIO9]8vWi>jy=F2_AQMFN,E0W5N[Z@R252Tt-|VIx-9^PU?$aC>P:pcD$}45_');
+define('SECURE_AUTH_SALT', '{/g(a&|:0/j_:P>X?ksSoreYG:4x1cg-yA`{|F+!U7w}i{/n+2X/]2B@GrEy>I],');
+define('LOGGED_IN_SALT',   '9l]:nhgH}Ydy07$|6hF6).{eS+kJRu{/CK9.(G,V^gH< :gt{+Iw~WWE-xG_u_mC');
+define('NONCE_SALT',       'Y2OerSHWI1&4*nQ~-MKd6N8_1Zj^(/oFM?ER4|N7!>Dny|X-0|*:G5ij+7b~ub!F');
 
 /**#@-*/
 

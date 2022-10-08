@@ -1,18 +1,18 @@
 FROM debian:buster
 
 RUN apt-get update
-RUN apt-get install nginx -y
-RUN apt-get install openssl -y
-RUN apt-get install curl -y
+RUN apt-get install -y nginx openssl curl
 
-RUN openssl req -newkey rsa:4096 \
+RUN openssl req -newkey rsa:2048 \
                 -x509 \
-                -sha256 \
                 -days 365 \
                 -nodes \
                 -keyout /etc/ssl/private/nginx.key \
                 -out /etc/ssl/certs/nginx.crt \
-                -subj "/C=PO/ST=Lisbon/L=Lisbon/O=42Lisboa/OU=42Lisboa/CN=fmeira.42.fr"
-COPY ./my_nginx.conf /etc/nginx/conf.d
+                -subj "/C=PT/ST=Lisbon/L=Lisbon/O=42Lisboa/OU=42Lisboa/CN=fmeira.42.fr"
+
+COPY ./conf/my_nginx.conf /etc/nginx/conf.d
+RUN mkdir /TEEEEST
 
 CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT umount /etc/hosts && echo "127.0.0.1 fmeira" >> /etc/hosts

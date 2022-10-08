@@ -5,14 +5,29 @@ networks:
         name: inet
 
 services:
+    wordpress:
+       # depends_on:
+       #     - mariadb
+        container_name: my_wordpress
+        build: ./requirements/wordpress
+        image: wordpress
+        volumes:
+            - ./requirements/wordpress/conf:/var/www/wordpress
+        networks:
+            - localhost
+        restart: always
+        environment:
+            - WORDPRESS_DB_NAME
+            - WORDPRESS_DB_USER
+            - WORDPRESS_DB_PASSWORD
     nginx:
         depends_on:
             - wordpress
         container_name: my_nginx
-        build: requirements/nginx
+        build: ./requirements/nginx
         image: nginx
         volumes:
-            - wordpress:/var/www/wordpress
+            - ./requirements/wordpress/conf:/var/www/wordpress
         networks:
                 - localhost
         restart: always
@@ -21,34 +36,19 @@ services:
             - NGINX_WORDPRESS_PORT
         ports:
             - "443:443"
-    wordpress:
-        depends_on:
-            -mariadb
-        container_name: my_wordpress
-        build: requirements/wordpress
-        image: wordpress
-        volumes:
-            - wordpress:/var/www/wordpress
-        networks:
-            - localhost
-        restart: always
-        environment:
-            - WORDPRESS_DB_NAME
-            - WORDPRESS_DB_USER
-            - WORDPRESS_DB_PASSWORD
 
 volumes:
         wordpress:
                 name: wordpress
                 driver: local
                 driver_opts:
-                        device: /home/fmeira/data/wordpress
+                        device: /home/user/data/wordpress-volume
                         o: bind
                         type: none
         mariadb:
                 name: mariadb
                 driver: local
                 driver_opts:
-                        device: /home/fmeira/data/mariadb
+                        device: /home/user/data/mariadb
                         o: bind
                         type: none
