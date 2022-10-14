@@ -1,25 +1,28 @@
-version: "3.8"
+#version: "3.8"
 
 networks:
-    localhost:
-        name: inet
+    inception-network:
+        driver: bridge
 
 services:
     wordpress:
-       # depends_on:
-       #     - mariadb
+        depends_on:
+            - mariadb
         container_name: my_wordpress
         build: ./requirements/wordpress
         image: wordpress
         volumes:
-            - ./requirements/wordpress/conf:/var/www/wordpress
+            - wordpress_volume:/var/www/wordpress
         networks:
-            - localhost
+            - inception-network
         restart: always
         environment:
             - WORDPRESS_DB_NAME
             - WORDPRESS_DB_USER
             - WORDPRESS_DB_PASSWORD
+        expose:
+            - "9000"
+
     nginx:
         depends_on:
             - wordpress
@@ -27,26 +30,41 @@ services:
         build: ./requirements/nginx
         image: nginx
         volumes:
-            - ./requirements/wordpress/conf:/var/www/wordpress
+            - wordpress_volume:/var/www/wordpress
         networks:
-                - localhost
+                - inception-network
         restart: always
         environment:
             - NGINX_WORDPRESS_CONTAINER_NAME
             - NGINX_WORDPRESS_PORT
         ports:
             - "443:443"
+        extra_hosts:
+            - "fmeira.42.fr:127.0.0.1"
+            - "www.fmeira.42.fr:127.0.0.1"
+
+    mariadb:
+        container_name: my_mariadb
+        build: ./requirements/mariadb
+        volumes:
+            - wordpress_volume:/var/lib/mysql
+        networks:
+            - inception-network
+        environment:
+            MYSQL_USER: MYSQL_USER
+            MYSQL_PASSWORD: MYSQL_PASSWORD
+            MYSQL_DATABASE: MYSQL_DATABASE
+        image: mariadb
+        restart: always
 
 volumes:
-        wordpress:
-                name: wordpress
+        wordpress_volume:
                 driver: local
                 driver_opts:
                         device: /home/user/data/wordpress-volume
                         o: bind
                         type: none
-        mariadb:
-                name: mariadb
+        wordpress_volume:
                 driver: local
                 driver_opts:
                         device: /home/user/data/mariadb

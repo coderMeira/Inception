@@ -15,4 +15,3 @@ COPY ./conf/my_nginx.conf /etc/nginx/conf.d
 RUN mkdir /TEEEEST
 
 CMD ["nginx", "-g", "daemon off;"]
-ENTRYPOINT umount /etc/hosts && echo "127.0.0.1 fmeira" >> /etc/hosts
