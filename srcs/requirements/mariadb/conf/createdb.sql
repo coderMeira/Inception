@@ -1,6 +1,0 @@
-CREATE DATABASE fmeiraDB;
-CREATE USER 'fmeira'@'%' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON fmeiraDB.* TO 'fmeira'@'%';
-FLUSH PRIVILEGES;
-
-ALTER USER 'root'@'localhost' IDENTIFIED BY '12345';

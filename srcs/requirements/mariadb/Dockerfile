@@ -1,8 +1,11 @@
-FROM debian:buster
-RUN apt-get update
-RUN apt-get install mariadb-server -y
-COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
-COPY ./conf/createdb.sql /
-RUN service mysql start && mysql < createdb.sql
-RUN rm -f ./conf/createdb.sql
-CMD /usr/bin/mysqld_safe
+FROM	debian:buster
+RUN     apt-get update -y && \
+		apt-get install mariadb-server -y
+
+RUN		mkdir -p /var/run/mysqld && mkdir -p /run/mysqld
+RUN     chown -R mysql:root /run/mysqld && chown -R mysql:root /var/run/mysqld
+
+COPY    tools/conf.sh /
+COPY	conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+
+ENTRYPOINT  ["sh", "conf.sh"]

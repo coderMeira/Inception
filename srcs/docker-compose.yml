@@ -1,72 +1,73 @@
-#version: "3.8"
-
-networks:
-    inception-network:
-        driver: bridge
+version: "3.8"
 
 services:
+    mariadb:
+        build: requirements/mariadb
+        container_name: mariadb
+        env_file: ./.env
+        image: mariadb
+        networks:
+            - inception_network
+        expose:
+            - "3306"
+        volumes:
+          - mariadb_volume:/var/lib/mysql
+        extra_hosts:
+            - "fmeira.42.fr:0.0.0.0"
+            - "www.fmeira.42.fr:0.0.0.0"
+        restart: always
+
     wordpress:
+        build: requirements/wordpress
+        container_name: wordpress
+        env_file: ./.env
+        image: wordpress
         depends_on:
             - mariadb
-        container_name: my_wordpress
-        build: ./requirements/wordpress
-        image: wordpress
-        volumes:
-            - wordpress_volume:/var/www/wordpress
         networks:
-            - inception-network
+            - inception_network
+        volumes:
+            - wordpress_volume:/var/www/html
         restart: always
-        environment:
-            - WORDPRESS_DB_NAME
-            - WORDPRESS_DB_USER
-            - WORDPRESS_DB_PASSWORD
+        extra_hosts:
+            - "fmeira.42.fr:0.0.0.0"
+            - "www.fmeira.42.fr:0.0.0.0"
         expose:
             - "9000"
 
     nginx:
+        build: requirements/nginx
+        container_name: nginx
+        env_file: ./.env
+        image: nginx
         depends_on:
             - wordpress
-        container_name: my_nginx
-        build: ./requirements/nginx
-        image: nginx
-        volumes:
-            - wordpress_volume:/var/www/wordpress
         networks:
-                - inception-network
-        restart: always
-        environment:
-            - NGINX_WORDPRESS_CONTAINER_NAME
-            - NGINX_WORDPRESS_PORT
+            - inception_network
         ports:
             - "443:443"
-        extra_hosts:
-            - "fmeira.42.fr:127.0.0.1"
-            - "www.fmeira.42.fr:127.0.0.1"
-
-    mariadb:
-        container_name: my_mariadb
-        build: ./requirements/mariadb
         volumes:
-            - wordpress_volume:/var/lib/mysql
-        networks:
-            - inception-network
-        environment:
-            MYSQL_USER: MYSQL_USER
-            MYSQL_PASSWORD: MYSQL_PASSWORD
-            MYSQL_DATABASE: MYSQL_DATABASE
-        image: mariadb
+            - wordpress_volume:/var/www/html
+            - ./nginx_logs:/var/log/nginx/
         restart: always
+        extra_hosts:
+        - "fmeira.42.fr:0.0.0.0"
+        - "www.fmeira.42.fr:0.0.0.0"
+
+networks:
+    inception_network:
+        driver: bridge
 
 volumes:
-        wordpress_volume:
+        mariadb_volume:
                 driver: local
                 driver_opts:
-                        device: /home/user/data/wordpress-volume
+                        device: /home/user/data/mariadb_volume
                         o: bind
                         type: none
         wordpress_volume:
                 driver: local
                 driver_opts:
-                        device: /home/user/data/mariadb
+                        device: /home/user/data/wordpress_volume
                         o: bind
                         type: none
